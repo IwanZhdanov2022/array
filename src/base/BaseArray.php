@@ -35,6 +35,7 @@ abstract class BaseArray implements \ArrayAccess, \Iterator, \Countable
         return array_key_exists($offset, $this->array);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $result = $this->array[$offset] ?? null;
@@ -59,16 +60,19 @@ abstract class BaseArray implements \ArrayAccess, \Iterator, \Countable
     }
 
     // Iterator
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->array[$this->position];
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->position;
     }
 
+    #[\ReturnTypeWillChange]
     public function next()
     {
         next($this->array);
@@ -76,12 +80,14 @@ abstract class BaseArray implements \ArrayAccess, \Iterator, \Countable
         return $this->position;
     }
 
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->array);
         $this->position = key($this->array);
     }
 
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return array_key_exists($this->position, $this->array);
