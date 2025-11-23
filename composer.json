@@ -1,4 +1,13 @@
 {
+	"name": "iwan07/array",
+	"description": "Методы для работы с массивами",
+	"authors": [
+		{
+			"name": "Иван Жданов",
+			"email": "iwanzhdanov2022@yandex.ru"
+		}
+	],
+	"license": "MIT",
 	"minimum-stability": "stable",
 	"require": {
 		"php": ">7.1",
