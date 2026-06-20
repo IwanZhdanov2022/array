@@ -9,14 +9,27 @@ abstract class BaseArray implements \ArrayAccess, \Iterator, \Countable
 
     public function __construct(array $array = [])
     {
-        $this->array = [];
-        foreach ($array as $key => $value) {
-            $this->array[$key] = is_array($value) ? new static($value) : $value;
-        }
+        $this->_fill($array);
     }
 
-    public static function from(array $array): self
+    public static function empty(): static
     {
+        return new static;
+    }
+
+    public static function from(array $array): static
+    {
+        return new static($array);
+    }
+
+    public static function generate(int $length, mixed $value = null): static
+    {
+        $array = [];
+        for ($i = 0; $i < $length; $i++) {
+            $array[] = is_callable($value)
+                ? $value($i)
+                : $value;
+        }
         return new static($array);
     }
 
@@ -97,5 +110,14 @@ abstract class BaseArray implements \ArrayAccess, \Iterator, \Countable
     public function count(): int
     {
         return count($this->array);
+    }
+
+    // protected
+    protected function _fill(array $array): void
+    {
+        $this->array = [];
+        foreach ($array as $key => $value) {
+            $this->array[$key] = is_array($value) ? new static($value) : $value;
+        }
     }
 }

@@ -7,6 +7,16 @@ class MethodsTest extends TestCase
 {
     protected ArrayMethods $src;
 
+    public function testGenerate()
+    {
+        $a1 = ArrayMethods::generate(3);
+        $this->assertEquals([0 => null, 1 => null, 2 => null], $a1->get());
+        $a2 = ArrayMethods::generate(5, 'abc');
+        $this->assertEquals([0 => 'abc', 1 => 'abc', 2 => 'abc', 3 => 'abc', 4 => 'abc'], $a2->get());
+        $a3 = ArrayMethods::generate(6, fn($i) => $i + 1);
+        $this->assertEquals([0 => 1, 1 => 2, 2 => 3, 3 => 4, 4 => 5, 5 => 6], $a3->get());
+    }
+
     public function testFilter()
     {
         $arr = [3, 7, 10, 34, 73, 50];
@@ -106,5 +116,43 @@ class MethodsTest extends TestCase
         $arr2 = [301, 'x' => 308];
         $dest2 = $src->merge(ArrayMethods::from($arr2));
         $this->assertEquals([3, 7, 10, 34, 'k' => 73, 50, 301, 'x' => 308], $dest2->get());
+    }
+
+    public function testChunk()
+    {
+        $arr = [1, 2, 3, 4, 5];
+        $src = ArrayMethods::from($arr);
+        $dest = $src->chunk(2);
+        $this->assertEquals([[1, 2], [3, 4], [5]], $dest->get());
+    }
+
+    public function testColumn()
+    {
+        $src = ArrayMethods::from([
+            ['id' => 10, 'name' => 'Alice', 'age' => 30],
+            ['id' => 20, 'name' => 'Bob',   'age' => 25],
+        ]);
+
+        $this->assertEquals(['Alice', 'Bob'], $src->column('name')->get());
+        $this->assertEquals([10 => 'Alice', 20 => 'Bob'], $src->column('name', 'id')->get());
+        $this->assertEquals([10 => ['id' => 10, 'name' => 'Alice', 'age' => 30], 20 => ['id' => 20, 'name' => 'Bob',   'age' => 25]], $src->column(null, 'id')->get());
+    }
+
+    public function testCombine()
+    {
+        $keys = ['id', 'name', 'age'];
+        $vals = [10, 'Alice', 30];
+        $dest = ArrayMethods::combine($keys, $vals);
+        $this->assertEquals(['id' => 10, 'name' => 'Alice', 'age' => 30], $dest->get());
+    }
+
+    public function testCountValues()
+    {
+        $vals = ArrayMethods::from(['apple', 'banana', 'apple', 'orange', 'banana'])
+            ->countValues();
+        $this->assertEquals(['apple' => 2, 'banana' => 2, 'orange' => 1], $vals->get());
+        $nums = ArrayMethods::from([1, 2, 2, 3])
+            ->countValues();
+        $this->assertEquals(['1' => 1, '2' => 2, '3' => 1], $nums->get());
     }
 }

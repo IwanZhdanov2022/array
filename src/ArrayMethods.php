@@ -11,14 +11,14 @@ class ArrayMethods extends BaseArray
         return new static(explode($delimiter, $string));
     }
 
-    public static function from(array $array): self
+    public function __clone()
     {
-        return parent::from($array);
+        $this->_fill($this->get());
     }
 
-    public function clone(): self
+    public static function combine(array $keys, array $values): self
     {
-        return new static($this->get());
+        return new static(array_combine($keys, $values));
     }
 
     public function sort(?callable $callback = null): self
@@ -132,7 +132,7 @@ class ArrayMethods extends BaseArray
         return new static($sliced);
     }
 
-    public function splice(int $offset, ?int $length = null, ...$replacements): self
+    public function splice(int $offset, ?int $length = null, mixed ...$replacements): self
     {
         foreach ($replacements as &$item) {
             if (is_array($item)) {
@@ -149,6 +149,21 @@ class ArrayMethods extends BaseArray
         $addArray = $array instanceof self ? $array->get() : $array;
         $merged = array_merge($this->array, $addArray);
         return new static($merged);
+    }
+
+    public function chunk(int $length, bool $preserveKeys = false): self
+    {
+        return new static(array_chunk($this->array, $length, $preserveKeys));
+    }
+
+    public function column(string|int|null $columnKey, string|int|null $indexKey = null): self
+    {
+        return new static(array_column($this->get(), $columnKey, $indexKey));
+    }
+
+    public function countValues(): self
+    {
+        return new static(array_count_values($this->array));
     }
 
     public function implode(string $glue = ''): string
