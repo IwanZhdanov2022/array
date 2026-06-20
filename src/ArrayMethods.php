@@ -44,6 +44,13 @@ class ArrayMethods extends BaseArray
         return new static(array_map($callback, $this->array, array_keys($this->array)));
     }
 
+    public function mapKeys(callable $callback): self
+    {
+        $tmp = $this->array;
+        $keys = array_map($callback, $tmp, array_keys($tmp));
+        return new static(array_combine($keys, array_values($tmp)));
+    }
+
     public function filter(?callable $callback = null): self
     {
         return new static(array_filter($this->array, $callback));

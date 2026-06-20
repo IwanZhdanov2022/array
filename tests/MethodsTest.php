@@ -31,6 +31,13 @@ class MethodsTest extends TestCase
         $this->assertEquals([9, 49, 100, 1156, 5329, 2500], $dest->get());
     }
 
+    public function testMapKeys()
+    {
+        $arr = [3, 7, 10, 34, 73, 50];
+        $dest = ArrayMethods::from($arr)->mapKeys(fn($x) => $x);
+        $this->assertEquals([3 => 3, 7 => 7, 10 => 10, 34 => 34, 73 => 73, 50 => 50], $dest->get());
+    }
+
     public function testReduce()
     {
         $arr = [3, 7, 10, 34, 73, 50];
